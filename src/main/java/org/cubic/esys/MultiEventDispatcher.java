@@ -3,6 +3,7 @@ package org.cubic.esys;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MultiEventDispatcher implements MultiEventBus {
@@ -55,5 +56,42 @@ public class MultiEventDispatcher implements MultiEventBus {
     @Override
     public Map<String, EventBus> getEventBusMap() {
         return eventBusMap;
+    }
+
+    @Override
+    public Set<Listener<?>> getListeners(String eventBusName) {
+        EventBus eventBus = eventBusMap.get(eventBusName);
+        if(eventBus == null)
+            return null;
+        return eventBus.getListeners();
+    }
+
+    @Override
+    public <T> Listener<T> getListener(String eventBusName, String listenerName) {
+        EventBus eventBus = eventBusMap.get(eventBusName);
+        if(eventBus == null)
+            return null;
+        return eventBus.getListener(listenerName);
+    }
+
+    @Override
+    public void postToAll(Object event) {
+        for(EventBus eventBus : eventBusList)
+            eventBus.post(event);
+    }
+
+    @Override
+    public void postToAll(Object object, PostInfo postInfo) {
+
+    }
+
+    @Override
+    public void post(Object event, String... eventBusNames) {
+
+    }
+
+    @Override
+    public void post(Object event, PostInfo postInfo, String... eventBusNames) {
+
     }
 }
