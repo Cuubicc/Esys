@@ -82,16 +82,27 @@ public class MultiEventDispatcher implements MultiEventBus {
 
     @Override
     public void postToAll(Object object, PostInfo postInfo) {
-
+        for(EventBus eventBus : eventBusList)
+            eventBus.post(object, postInfo);
     }
 
     @Override
     public void post(Object event, String... eventBusNames) {
-
+        for(String busName : eventBusNames){
+            EventBus eventBus = eventBusMap.get(busName);
+            if(eventBus == null)
+                continue;
+            eventBus.post(event);
+        }
     }
 
     @Override
     public void post(Object event, PostInfo postInfo, String... eventBusNames) {
-
+        for(String busName : eventBusNames){
+            EventBus eventBus = eventBusMap.get(busName);
+            if(eventBus == null)
+                continue;
+            eventBus.post(event, postInfo);
+        }
     }
 }
