@@ -1,2 +1,3 @@
 # Esys
-dunno what do put here lol
+An event bus for java designed to be flexible.
+Work is still in progres.
