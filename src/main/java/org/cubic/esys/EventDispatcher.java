@@ -4,6 +4,7 @@ import net.jodah.typetools.TypeResolver;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
@@ -105,12 +106,12 @@ public class EventDispatcher implements EventBus {
 
     @Override
     public void unsubscribe(Class<?> cls) {
-        unsubscribe(cls, null);
+        unsubscribe(cls, null, false);
     }
 
     @Override
     public void unsubscribe(Object o) {
-        unsubscribe(o.getClass(), o);
+        unsubscribe(o.getClass(), o, false);
     }
 
     @Override
@@ -122,6 +123,11 @@ public class EventDispatcher implements EventBus {
         listeners.remove(listener);
         EVENT_HOOK_LISTENER_CACHE.remove(eventHook);
         LISTENER_CACHE.remove(listener.getSubscribeInfo().getName());
+    }
+
+    @Override
+    public void unsubscribeAll(Class<?> cls) {
+        unsubscribe(cls, null, true);
     }
 
     @Override
@@ -189,6 +195,8 @@ public class EventDispatcher implements EventBus {
 
     private void subscribe(Class<?> cls, Object instance, Predicate<Listener<?>>[] predicates){
         for(Method m : cls.getDeclaredMethods()){
+            if(instance == null && !Modifier.isStatic(m.getModifiers()))
+                continue;
             m.setAccessible(true);
             MethodWrapper wrapper = new MethodWrapper(m, instance);
             MethodListener<?> listener = MethodListener.newListener(wrapper);
@@ -213,6 +221,8 @@ public class EventDispatcher implements EventBus {
         if(!this.searchFields)
             return;
         for(Field f : cls.getDeclaredFields()){
+            if(instance == null && !Modifier.isStatic(f.getModifiers()))
+                continue;
             if(!EventHook.class.isAssignableFrom(f.getType()))
                 continue;
             f.setAccessible(true);
@@ -247,8 +257,10 @@ public class EventDispatcher implements EventBus {
         }
     }
 
-    private void unsubscribe(Class<?> cls, Object instance){
+    private void unsubscribe(Class<?> cls, Object instance, boolean removeAll){
         for(Method m : cls.getDeclaredMethods()){
+            if(!removeAll && instance == null && !Modifier.isStatic(m.getModifiers()))
+                continue;
             MethodWrapper wrapper = new MethodWrapper(m, instance);
             MethodListener<?> listener = METHOD_LISTENER_CACHE.get(wrapper);
             if(listener == null)
@@ -261,6 +273,8 @@ public class EventDispatcher implements EventBus {
         if(!this.searchFields)
             return;
         for(Field f : cls.getDeclaredFields()){
+            if(!removeAll && instance == null && !Modifier.isStatic(f.getModifiers()))
+                continue;
             if(!EventHook.class.isAssignableFrom(f.getType()))
                 continue;
             f.setAccessible(true);

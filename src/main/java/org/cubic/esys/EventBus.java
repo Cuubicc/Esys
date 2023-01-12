@@ -28,6 +28,8 @@ public interface EventBus {
 
     <T> void unsubscribe(EventHook<T> eventHook);
 
+    void unsubscribeAll(Class<?> cls);
+
     void post(Object event);
 
     void post(Object event, PostInfo info);
