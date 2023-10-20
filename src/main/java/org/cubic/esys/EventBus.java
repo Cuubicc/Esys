@@ -45,4 +45,17 @@ public interface EventBus {
     List<Listener<?>> getListenerForEvent(Class<?> cls);
 
     <T> Listener<T> getListener(String name);
+
+
+    public static EventBusBuilder<EventBus> builder() {
+        return new EventBusBuilder<>();
+    }
+
+    public static EventBus buildDefault(String name) {
+        return new EventDispatcher(name);
+    }
+
+    public static EventBus buildAttachable(String name) {
+        return new AttachableEventDispatcher(name);
+    }
 }
