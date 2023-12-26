@@ -27,4 +27,18 @@ public class Benchmark {
         System.out.println("Runtime: " + runtime);
         return Math.round((double) runtime / (double) runCont);
     }
+
+    public static long average(int runCount, Runnable runnable) {
+        double runtime = 0;
+        for (int i = 0; i < runCount; i++) {
+            if (i < 10) {
+                continue;
+            }
+            long start = System.nanoTime();
+            runnable.run();
+            long end = System.nanoTime();
+            runtime += ((end - start) - runtime) / (i + 1.0);
+        }
+        return Math.round(runtime);
+    }
 }

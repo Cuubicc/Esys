@@ -46,6 +46,9 @@ public interface EventBus {
 
     <T> Listener<T> getListener(String name);
 
+    @WorkInProgress
+    AsyncEventBus toAsync();
+
 
     public static EventBusBuilder<EventBus> builder() {
         return new EventBusBuilder<>();
@@ -55,7 +58,12 @@ public interface EventBus {
         return new EventDispatcher(name);
     }
 
-    public static EventBus buildAttachable(String name) {
+    public static AttachableEventBus buildAttachable(String name) {
         return new AttachableEventDispatcher(name);
+    }
+
+    public static AsyncEventBus buildAsync(String name) {
+        AttachableEventBus bus = buildAttachable(name);
+        return new AsyncEventDispatcher(bus, bus);
     }
 }

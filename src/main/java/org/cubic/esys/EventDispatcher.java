@@ -193,6 +193,12 @@ public class EventDispatcher implements EventBus {
         return (Listener<T>) LISTENER_CACHE.get(name);
     }
 
+    @WorkInProgress
+    @Override
+    public AsyncEventBus toAsync() {
+        return new AsyncEventDispatcher(this, null);
+    }
+
     private void subscribe(Class<?> cls, Object instance, Predicate<Listener<?>>[] predicates){
         for(Method m : cls.getDeclaredMethods()){
             if(instance == null && !Modifier.isStatic(m.getModifiers()))
@@ -241,6 +247,8 @@ public class EventDispatcher implements EventBus {
             if(subscribe.type() == Dummy.class)
                 continue;
             EventHookListener<?> listener = EventHookListener.newUnknown(eventHook, new SubscribeInfo(subscribe.name(), subscribe.priority()), subscribe.type());
+            if(!testAll(listener, predicates))
+                continue;
             List<Listener<?>> listeners = LISTENERS.computeIfAbsent(listener.getEventType(), t -> new ArrayList<>(64));
             int index = listeners.size();
             for(int i = 0; i < listeners.size(); i++){

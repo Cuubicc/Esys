@@ -1,18 +1,24 @@
 package testing;
 
-import org.cubic.esys.EventBus;
-import org.cubic.esys.EventDispatcher;
-import org.cubic.esys.EventHook;
-import org.cubic.esys.Subscribe;
+import org.cubic.esys.*;
+import java.io.IOException;
 
 @SuppressWarnings("ALL")
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
+        ListenerEngine engine = ListenerEngine.makeDefault(options -> {
+            options.mode = options.SEARCH_METHODS | options.SEARCH_FIELDS;
+        });
+        engine.scanAllStatic(App.class, System.out::println);
+    }
+
+    public static void test() {
         EventBus eventBus = EventDispatcher.builder()
-                                           .searchFields()
-                                           .name("EventBus")
-                                           .build();
+                .searchFields()
+                .name("EventBus")
+                .build();
         //eventBus.subscribe(App::onMain1);
         //eventBus.unsubscribe(App::onMain1);
         //eventBus.subscribe(eventHook);
@@ -42,49 +48,49 @@ public class App {
         System.out.println("onMain1");
     }
     @Subscribe private static void onMain2(App main){
-        //System.out.println("onMain2");
+        System.out.println("onMain2");
     }
     @Subscribe(priority = 101)
     private static void onMain3(App main){
         System.out.println("onMain3");
     }
     @Subscribe private static void onMain4(App main){
-        //System.out.println("onMain4");
+        System.out.println("onMain4");
     }
     @Subscribe private static void onMain5(App main){
-        //System.out.println("onMain5");
+        System.out.println("onMain5");
     }
     @Subscribe private static void onMain6(App main){
-        //System.out.println("onMain6");
+        System.out.println("onMain6");
     }
     @Subscribe private static void onMain7(App main){
-        //System.out.println("onMain7");
+        System.out.println("onMain7");
     }
     @Subscribe private static void onMain8(App main){
-        //System.out.println("onMain8");
+        System.out.println("onMain8");
     }
     @Subscribe private static void onMain9(App main){
-        //System.out.println("onMain9");
+        System.out.println("onMain9");
     }
     @Subscribe private static void onMain10(App main){
-        //System.out.println("onMain10");
+        System.out.println("onMain10");
     }
     @Subscribe private static void onMain11(App main){
-        //System.out.println("onMain11");
+        System.out.println("onMain11");
     }
     @Subscribe private static void onMain12(App main){
-        //System.out.println("onMain12");
+        System.out.println("onMain12");
     }
     @Subscribe private static void onMain13(App main){
-        //System.out.println("onMain13");
+        System.out.println("onMain13");
     }
     @Subscribe private static void onMain14(App main){
-        //System.out.println("onMain14");
+        System.out.println("onMain14");
     }
     @Subscribe private static void onMain15(App main){
-        //System.out.println("onMain15");
+        System.out.println("onMain15");
     }
     @Subscribe private static void onMain16(App main){
-        //System.out.println("onMain16");
+        System.out.println("onMain16");
     }
 }

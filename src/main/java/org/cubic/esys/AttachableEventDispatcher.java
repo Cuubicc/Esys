@@ -52,4 +52,10 @@ public class AttachableEventDispatcher extends EventDispatcher implements Attach
     public List<EventBus> eventBusesForName(String name) {
         return attached.computeIfAbsent(name, t -> new ArrayList<>());
     }
+
+    @WorkInProgress
+    @Override
+    public AsyncEventBus toAsync() {
+        return new AsyncEventDispatcher(this, this);
+    }
 }

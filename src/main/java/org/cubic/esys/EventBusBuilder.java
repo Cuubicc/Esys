@@ -14,12 +14,15 @@ public class EventBusBuilder<T extends EventBus> {
 
     private boolean searchFields;
 
+    private boolean async;
+
     public EventBusBuilder(){
         this.name = null;
         this.superListeners = false;
         this.attachable = false;
         this.attachPostInfo = false;
         this.searchFields = false;
+        this.async = false;
     }
 
     public EventBusBuilder<T> name(String name){
@@ -49,10 +52,21 @@ public class EventBusBuilder<T extends EventBus> {
     }
 
     @SuppressWarnings("unchecked")
+    public EventBusBuilder<AsyncEventBus> async() {
+        this.async = true;
+        return (EventBusBuilder<AsyncEventBus>) this;
+    }
+
+    @SuppressWarnings("unchecked")
     public T build(){
         Objects.requireNonNull(name);
+        EventBus eventBus;
         if(this.attachable)
-            return (T) new AttachableEventDispatcher(this.name, this.superListeners, this.searchFields, this.attachPostInfo);
-        return (T) new EventDispatcher(this.name, this.superListeners, this.searchFields);
+            eventBus = new AttachableEventDispatcher(this.name, this.superListeners, this.searchFields, this.attachPostInfo);
+        else
+            eventBus = new EventDispatcher(this.name, this.superListeners, this.searchFields);
+        if (this.async)
+            return (T) new AsyncEventDispatcher(eventBus, this.attachable ? (AttachableEventBus) eventBus : null);
+        return (T) eventBus;
     }
 }

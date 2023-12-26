@@ -73,4 +73,9 @@ public abstract class Listener<T> {
     }
 
     protected abstract void call(T event);
+
+    @Override
+    public String toString() {
+        return "type = " + eventType.getName() + ", name = " + subscribeInfo.getName() + ", priority = " + subscribeInfo.getPriority();
+    }
 }
