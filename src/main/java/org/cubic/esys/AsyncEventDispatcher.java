@@ -18,7 +18,7 @@ public class AsyncEventDispatcher implements AsyncEventBus {
     public AsyncEventDispatcher(EventBus bus, AttachableEventBus attachableEventBus) {
         this.bus = bus;
         this.attachableEventBus = attachableEventBus;
-        this.executor = new ThreadPoolExecutor(1, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<>());
+        this.executor = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 0L, TimeUnit.SECONDS, new SynchronousQueue<>());
     }
 
     private void run(Runnable runnable) {

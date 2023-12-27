@@ -7,11 +7,10 @@ import java.io.IOException;
 public class App {
 
     public static void main(String[] args) throws IOException {
-
-        ListenerEngine engine = ListenerEngine.makeDefault(options -> {
-            options.mode = options.SEARCH_METHODS | options.SEARCH_FIELDS;
-        });
-        engine.scanAllStatic(App.class, System.out::println);
+        EventBus bus = EventBus.buildDefault("test");
+        bus.subscribe(App.class);
+        bus.toAsync().post(new App());
+        System.out.println("i am here");
     }
 
     public static void test() {
